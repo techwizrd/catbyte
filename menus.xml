@@ -1,0 +1,12 @@
+<ui>
+	<menubar name="MenuBar">
+		<menu action="File">
+			<menuitem action="New"/>
+			<menuitem action="Open"/>
+			<menuitem action="Quick Open"/>
+			<menuitem action="Save"/>
+			<menuitem action="Save as..."/>
+			<menuitem action="Quit"/>
+		</menu>
+	</menubar>
+</ui>
