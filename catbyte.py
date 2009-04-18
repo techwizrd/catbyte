@@ -83,9 +83,9 @@ class CatByte:
 			self.actiongroup.add_actions([
 										('New', gtk.STOCK_NEW, 'New', None, "New File", self.newFile),
 										('Open', gtk.STOCK_OPEN, 'Open', None, "Open a File", self.normOpen),
-										('Quick Open', gtk.STOCK_OPEN, 'Quick _Open', None, "Quickly Open a File", self.quickOpen),
+										('Quick Open', None, 'Quick _Open', None, "Quickly Open a File", self.quickOpen),
 										('Save', gtk.STOCK_SAVE, 'Save', None, "Save File", self.saveFile),
-										('Save as...', gtk.STOCK_SAVE, 'Save as...', None, "Save as...", self.saveAs),
+										('Save as...', None, 'Save as...', None, "Save as...", self.saveAs),
 										('Quit', gtk.STOCK_QUIT, '_Quit', None, 'Quit CatByte', gtk.main_quit),
 										('File', None, '_File')
 										])
@@ -106,7 +106,9 @@ class CatByte:
 		self.notebook.popup_enable()
 		self.notebook.set_scrollable(True)
 		self.notebox.add(self.notebook)
-		a = EditorPart(filename = "/home/kunal/Projects/ced/catbyte/catbyte.py")
+		self.documents = []
+		a = EditorPart()
+		self.documents.append(a)
 		self.notebook.append_page(a.vbox, gtk.Label(a.title))
 		self.notebook.get_current_page()
 
@@ -116,19 +118,19 @@ class CatByte:
 	########################
 	# Menu/Toolbar Functions
 	########################
-	def newFile(self):
+	def newFile(self, widget, data = None):
 		pass
 	
-	def normOpen(self):
+	def normOpen(self, widget, data = None):
 		pass
 	
-	def quickOpen(self):
+	def quickOpen(self, widget, data = None):
 		pass
 	
-	def saveFile(self):
+	def saveFile(self, widget, data = None):
 		pass
 	
-	def saveAs(self):
+	def saveAs(self, widget, data = None):
 		pass
 
 #	def delete_event(self, widget, event, data=None):
@@ -136,7 +138,7 @@ class CatByte:
 #		return False
 
 #	def destroy(self, widget, data=None):
-#		print "Exiting CodeCat"
+#		print "Exiting CatByte"
 #		gtk.main_quit()
 
 	def main(self):
