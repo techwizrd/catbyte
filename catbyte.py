@@ -107,9 +107,9 @@ class CatByte:
 		self.notebook.set_scrollable(True)
 		self.notebox.add(self.notebook)
 		self.documents = []
-		a = EditorPart()
-		self.documents.append(a)
-		self.notebook.append_page(a.vbox, gtk.Label(a.title))
+		self.aa = EditorPart("./README")
+		self.documents.append(self.aa)
+		self.notebook.append_page(self.aa.vbox, gtk.Label(self.aa.title))
 		self.notebook.get_current_page()
 
 	def initializeSidebar(self):
@@ -128,7 +128,7 @@ class CatByte:
 		pass
 	
 	def saveFile(self, widget, data = None):
-		pass
+		self.aa.saveFile()
 	
 	def saveAs(self, widget, data = None):
 		pass
@@ -162,17 +162,96 @@ class EditorPart:
 		if self.filename != None:
 			self.title = self.filename
 			try:
-				codefile = open(filename, 'r')
-				a = gtksourceview.SourceLanguagesManager().get_language_from_mime_type(mimetypes.guess_type(filename)[0])
+				codefile = open(filename, 'rb')
+				filetype = mimetypes.guess_type(filename)[0]
+				if filetype == None:
+					filetype = "text/plain"
+				else:
+					print filetype
+				a = gtksourceview.SourceLanguagesManager().get_language_from_mime_type(filetype)
 				self.sourcebuffer.set_language(a)
 				self.sourcebuffer.begin_not_undoable_action()
-				self.sourcebuffer.set_text(codefile.read())
+				the_source_code = ""
+				for line in codefile:
+					the_source_code += line
+				print the_source_code
+				self.sourcebuffer.set_text(the_source_code)
 				self.sourcebuffer.end_not_undoable_action()
 				codefile.close()
 			except Exception, e:
 				print str(e)
 		else:
 			self.title = "untitled"
+
+	def saveFile(self):
+		if self.filename == None:
+			print "filename is None\nTODO: have the code pop opena dialog for opening the file"
+			fc = gtk.FileChooserDialog(title='Open File...',
+										parent=None,
+										action=gtk.FILE_CHOOSER_ACTION_OPEN,
+										buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
+			fc.set_default_response(gtk.RESPONSE_OK)
+			response = fc.run()
+			if response == gtk.RESPONSE_OK:
+				self.filename = fc.get_filename()
+				self.title = self.filename
+				try:
+					codefile = open(self.filename, 'wb')
+					the_source_code = self.sourcebuffer.get_text(self.sourcebuffer.get_start_iter(), self.sourcebuffer.get_end_iter(), False)
+					codefile.write(the_source_code)
+					codefile.close()
+				except Exception, e:
+					print str(e)
+					try:
+						codefile.close()
+					except:
+						pass
+		else:
+			try:
+				codefile = open(self.filename, 'wb')
+				the_source_code = self.sourcebuffer.get_text(self.sourcebuffer.get_start_iter(), self.sourcebuffer.get_end_iter(), False)
+				codefile.write(the_source_code)
+				codefile.close()
+			except Exception, e:
+				print str(e)
+				try:
+					codefile.close()
+				except:
+					pass
+	
+	def openFile(self):
+		fc = gtk.FileChooserDialog(title='Open File...',
+									parent=None,
+									action=gtk.FILE_CHOOSER_ACTION_OPEN,
+									buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
+		fc.set_default_response(gtk.RESPONSE_OK)
+		response = fc.run()
+		if response == gtk.RESPONSE_OK:
+			self.filename = fc.get_filename()
+			self.title = self.filename
+			try:
+				codefile = open(filename, 'rb')
+				filetype = mimetypes.guess_type(filename)[0]
+				if filetype == None:
+					filetype = "text/plain"
+				else:
+					print filetype
+				a = gtksourceview.SourceLanguagesManager().get_language_from_mime_type(filetype)
+				self.sourcebuffer.set_language(a)
+				self.sourcebuffer.begin_not_undoable_action()
+				the_source_code = ""
+				for line in codefile:
+					the_source_code += line
+				print the_source_code
+				self.sourcebuffer.set_text(the_source_code)
+				self.sourcebuffer.end_not_undoable_action()
+				codefile.close()
+			except Exception, e:
+				print str(e)
+		else:
+			pass
+		fc.destroy()
+
 
 if __name__ == "__main__":
 	print "CatByte v%s" % __version__
