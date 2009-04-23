@@ -107,10 +107,9 @@ class CatByte:
 		self.notebook.set_scrollable(True)
 		self.notebox.add(self.notebook)
 		self.documents = []
-		self.aa = EditorPart("./README")
-		self.documents.append(self.aa)
-		self.notebook.append_page(self.aa.vbox, gtk.Label(self.aa.title))
-		self.notebook.get_current_page()
+		aa = EditorPart("./README")
+		self.documents.append(aa)
+		self.notebook.append_page(aa.vbox, gtk.Label(aa.title))
 
 	def initializeSidebar(self):
 		pass
@@ -119,16 +118,21 @@ class CatByte:
 	# Menu/Toolbar Functions
 	########################
 	def newFile(self, widget, data = None):
-		pass
+		aa = EditorPart()
+		self.notebook.append_page(aa.vbox, gtk.Label(aa.title))
+		self.documents.append(aa)
 	
 	def normOpen(self, widget, data = None):
-		pass
+		aa = EditorPart()
+		aa.openFile()
+		self.notebook.append_page(aa.vbox, gtk.Label(aa.title))
+		self.documents.append(aa)
 	
 	def quickOpen(self, widget, data = None):
 		pass
 	
 	def saveFile(self, widget, data = None):
-		self.aa.saveFile()
+		self.documents[self.notebook.get_current_page()].saveFile() #.saveFile()
 	
 	def saveAs(self, widget, data = None):
 		pass
@@ -185,10 +189,9 @@ class EditorPart:
 
 	def saveFile(self):
 		if self.filename == None:
-			print "filename is None\nTODO: have the code pop opena dialog for opening the file"
-			fc = gtk.FileChooserDialog(title='Open File...',
+			fc = gtk.FileChooserDialog(title='Save File...',
 										parent=None,
-										action=gtk.FILE_CHOOSER_ACTION_OPEN,
+										action=gtk.FILE_CHOOSER_ACTION_SAVE,
 										buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
 			fc.set_default_response(gtk.RESPONSE_OK)
 			response = fc.run()
@@ -200,12 +203,16 @@ class EditorPart:
 					the_source_code = self.sourcebuffer.get_text(self.sourcebuffer.get_start_iter(), self.sourcebuffer.get_end_iter(), False)
 					codefile.write(the_source_code)
 					codefile.close()
+					fc.destroy()
 				except Exception, e:
 					print str(e)
 					try:
 						codefile.close()
+						fc.destroy()
 					except:
-						pass
+						fc.destroy()
+			else:
+				fc.destroy()
 		else:
 			try:
 				codefile = open(self.filename, 'wb')
@@ -230,8 +237,8 @@ class EditorPart:
 			self.filename = fc.get_filename()
 			self.title = self.filename
 			try:
-				codefile = open(filename, 'rb')
-				filetype = mimetypes.guess_type(filename)[0]
+				codefile = open(self.filename, 'rb')
+				filetype = mimetypes.guess_type(self.filename)[0]
 				if filetype == None:
 					filetype = "text/plain"
 				else:
