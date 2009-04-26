@@ -80,6 +80,9 @@ class CatByte:
 		try:
 			self.uimanager.add_ui_from_file("./menus.xml")
 			self.actiongroup = gtk.ActionGroup('CatByte')
+			self.closeDocumentMenuItem = gtk.Action('Close Document', 'Close Document', 'Close Document', None)
+			self.closeDocumentMenuItem.connect("activate", self.closeDocument)
+			self.actiongroup.add_action_with_accel(self.closeDocumentMenuItem, "<Control>w")
 			self.actiongroup.add_actions([
 										('New', gtk.STOCK_NEW, 'New', None, "New File", self.newFile),
 										('Open', gtk.STOCK_OPEN, 'Open', None, "Open a File", self.normOpen),
@@ -136,6 +139,10 @@ class CatByte:
 	
 	def saveAs(self, widget, data = None):
 		pass
+	
+	def closeDocument(self, widget, data = None):
+		self.documents.pop(self.notebook.get_current_page())
+		self.notebook.remove_page(self.notebook.get_current_page())
 
 #	def delete_event(self, widget, event, data=None):
 #		#print "delete event occurred"
@@ -164,7 +171,7 @@ class EditorPart:
 		self.vbox.show_all()
 		self.filename = filename
 		if self.filename != None:
-			self.title = self.filename
+			self.title = os.path.basename(self.filename)
 			try:
 				codefile = open(filename, 'rb')
 				filetype = mimetypes.guess_type(filename)[0]
@@ -197,7 +204,7 @@ class EditorPart:
 			response = fc.run()
 			if response == gtk.RESPONSE_OK:
 				self.filename = fc.get_filename()
-				self.title = self.filename
+				self.title = os.path.basename(self.filename)
 				try:
 					codefile = open(self.filename, 'wb')
 					the_source_code = self.sourcebuffer.get_text(self.sourcebuffer.get_start_iter(), self.sourcebuffer.get_end_iter(), False)
@@ -235,7 +242,7 @@ class EditorPart:
 		response = fc.run()
 		if response == gtk.RESPONSE_OK:
 			self.filename = fc.get_filename()
-			self.title = self.filename
+			self.title = os.path.basename(self.filename)
 			try:
 				codefile = open(self.filename, 'rb')
 				filetype = mimetypes.guess_type(self.filename)[0]
