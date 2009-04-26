@@ -62,10 +62,9 @@ except Exception, e:
 class CatByte:
 	def __init__(self):
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-		self.window.set_size_request(800,600)
+		self.window.set_default_size(800,600)
 		self.window.set_position(gtk.WIN_POS_CENTER)
-		self.window.set_title("CatByte")
-		
+		self.window.set_title("untitled - CatByte")
 		self.initializeMenus()
 		self.initializeNotebook()
 		self.vbox = gtk.VBox()
@@ -80,15 +79,17 @@ class CatByte:
 		try:
 			self.uimanager.add_ui_from_file("./menus.xml")
 			self.actiongroup = gtk.ActionGroup('CatByte')
-			self.closeDocumentMenuItem = gtk.Action('Close Document', 'Close Document', 'Close Document', None)
+			self.closeDocumentMenuItem = gtk.Action('Close Document', 'Close Document', 'Close Document', gtk.STOCK_QUIT)
 			self.closeDocumentMenuItem.connect("activate", self.closeDocument)
-			self.actiongroup.add_action_with_accel(self.closeDocumentMenuItem, "<Control>w")
+			self.actiongroup.add_action_with_accel(self.closeDocumentMenuItem, "<Control>W")
+			self.saveAsMenuItem = gtk.Action('Save as...', 'Save as...', 'Save as...', gtk.STOCK_SAVE)
+			self.saveAsMenuItem.connect("activate", self.saveAs)
+			self.actiongroup.add_action_with_accel(self.saveAsMenuItem, "<Control><Shift>S")
 			self.actiongroup.add_actions([
 										('New', gtk.STOCK_NEW, 'New', None, "New File", self.newFile),
 										('Open', gtk.STOCK_OPEN, 'Open', None, "Open a File", self.normOpen),
 										('Quick Open', None, 'Quick _Open', None, "Quickly Open a File", self.quickOpen),
 										('Save', gtk.STOCK_SAVE, 'Save', None, "Save File", self.saveFile),
-										('Save as...', None, 'Save as...', None, "Save as...", self.saveAs),
 										('Quit', gtk.STOCK_QUIT, '_Quit', None, 'Quit CatByte', gtk.main_quit),
 										('File', None, '_File')
 										])
@@ -109,13 +110,26 @@ class CatByte:
 		self.notebook.popup_enable()
 		self.notebook.set_scrollable(True)
 		self.notebox.add(self.notebook)
-		self.documents = []
-		aa = EditorPart("./README")
+		self.documents, self.documents2 = [], []
+		aa = EditorPart()
 		self.documents.append(aa)
+		self.documents2.append(aa.vbox)
 		self.notebook.append_page(aa.vbox, gtk.Label(aa.title))
+		self.notebook.set_tab_reorderable(aa.vbox, True)
+		self.notebook.set_tab_detachable(aa.vbox, True)
 
 	def initializeSidebar(self):
+		#self.sidebarBox()
 		pass
+	
+	def setWindowTitle(self, widget = None, arg2 = None, arg3 = None):
+		print widget, "\t", arg2, "\t", arg3
+		self.currFilename = self.documents[self.documents2.index(self.notebook.get_nth_page(arg3))].filename
+		#print self.currFilename
+		if self.currFilename != None:
+			self.window.set_title(os.path.basename(self.currFilename) + " - " + os.path.dirname(self.currFilename) + " - CatByte")
+		else:
+			self.window.set_title("untitled - CatByte")
 	
 	########################
 	# Menu/Toolbar Functions
@@ -124,21 +138,28 @@ class CatByte:
 		aa = EditorPart()
 		self.notebook.append_page(aa.vbox, gtk.Label(aa.title))
 		self.documents.append(aa)
+		self.documents2.append(aa.vbox)
+		self.notebook.set_tab_reorderable(aa.vbox, True)
+		self.notebook.set_tab_detachable(aa.vbox, True)
 	
 	def normOpen(self, widget, data = None):
 		aa = EditorPart()
 		aa.openFile()
 		self.notebook.append_page(aa.vbox, gtk.Label(aa.title))
 		self.documents.append(aa)
+		self.documents2.append(aa.vbox)
+		#self.notebook.set_tab_reorderable(aa.vbox, True)
+		#self.notebook.set_tab_detachable(aa.vbox, True)
 	
 	def quickOpen(self, widget, data = None):
 		pass
 	
 	def saveFile(self, widget, data = None):
-		self.documents[self.notebook.get_current_page()].saveFile() #.saveFile()
+		#self.documents[self.notebook.get_current_page()].saveFile() #.saveFile()
+		self.documents[self.documents2.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].saveFile()
 	
 	def saveAs(self, widget, data = None):
-		pass
+		self.documents[self.documents2.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].saveAs()
 	
 	def closeDocument(self, widget, data = None):
 		self.documents.pop(self.notebook.get_current_page())
@@ -155,6 +176,7 @@ class CatByte:
 	def main(self):
 		self.window.connect("delete_event", gtk.main_quit)
 		self.window.connect("destroy", gtk.main_quit)
+		self.notebook.connect("switch-page", self.setWindowTitle)
 
 class EditorPart:
 	def __init__(self, filename = None):
@@ -172,6 +194,7 @@ class EditorPart:
 		self.filename = filename
 		if self.filename != None:
 			self.title = os.path.basename(self.filename)
+			catbyte.setWindowTitle()
 			try:
 				codefile = open(filename, 'rb')
 				filetype = mimetypes.guess_type(filename)[0]
@@ -196,30 +219,7 @@ class EditorPart:
 
 	def saveFile(self):
 		if self.filename == None:
-			fc = gtk.FileChooserDialog(title='Save File...',
-										parent=None,
-										action=gtk.FILE_CHOOSER_ACTION_SAVE,
-										buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
-			fc.set_default_response(gtk.RESPONSE_OK)
-			response = fc.run()
-			if response == gtk.RESPONSE_OK:
-				self.filename = fc.get_filename()
-				self.title = os.path.basename(self.filename)
-				try:
-					codefile = open(self.filename, 'wb')
-					the_source_code = self.sourcebuffer.get_text(self.sourcebuffer.get_start_iter(), self.sourcebuffer.get_end_iter(), False)
-					codefile.write(the_source_code)
-					codefile.close()
-					fc.destroy()
-				except Exception, e:
-					print str(e)
-					try:
-						codefile.close()
-						fc.destroy()
-					except:
-						fc.destroy()
-			else:
-				fc.destroy()
+			self.saveAs()
 		else:
 			try:
 				codefile = open(self.filename, 'wb')
@@ -232,6 +232,34 @@ class EditorPart:
 					codefile.close()
 				except:
 					pass
+		
+	def saveAs(self):
+		fc = gtk.FileChooserDialog(title='Save As...',
+									parent=None,
+									action=gtk.FILE_CHOOSER_ACTION_SAVE,
+									buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
+		fc.set_default_response(gtk.RESPONSE_OK)
+		response = fc.run()
+		if response == gtk.RESPONSE_OK:
+			self.filename = fc.get_filename()
+			self.title = os.path.basename(self.filename)
+			catbyte.notebook.set_tab_label_text(self.vbox, self.title)
+			catbyte.setWindowTitle()
+			try:
+				codefile = open(self.filename, 'wb')
+				the_source_code = self.sourcebuffer.get_text(self.sourcebuffer.get_start_iter(), self.sourcebuffer.get_end_iter(), False)
+				codefile.write(the_source_code)
+				codefile.close()
+				fc.destroy()
+			except Exception, e:
+				print str(e)
+				try:
+					codefile.close()
+					fc.destroy()
+				except:
+					fc.destroy()
+		else:
+			fc.destroy()
 	
 	def openFile(self):
 		fc = gtk.FileChooserDialog(title='Open File...',
@@ -242,7 +270,10 @@ class EditorPart:
 		response = fc.run()
 		if response == gtk.RESPONSE_OK:
 			self.filename = fc.get_filename()
+			print self.filename
 			self.title = os.path.basename(self.filename)
+			catbyte.notebook.set_tab_label_text(self.vbox, self.title)
+			#catbyte.setWindowTitle(None, None, )
 			try:
 				codefile = open(self.filename, 'rb')
 				filetype = mimetypes.guess_type(self.filename)[0]
