@@ -77,23 +77,47 @@ class CatByte:
 	def initializeMenus(self):
 		self.uimanager = gtk.UIManager()
 		try:
-			self.uimanager.add_ui_from_file("./menus.xml")
+			#self.uimanager.add_ui_from_file("./menus.xml")
+			self.menuString = """<ui>
+	<menubar name="MenuBar">
+		<menu action="File">
+			<menuitem action="New"/>
+			<separator name="sep1"/>
+			<menuitem action="Open"/>
+			<menuitem action="Quick Open"/>
+			<separator name="sep2"/>
+			<menuitem action="Save"/>
+			<menuitem action="Save as..."/>
+			<separator name="sep3"/>
+			<menuitem action="Close Document"/>
+			<menuitem action="Quit"/>
+		</menu>
+	</menubar>
+</ui>"""
+			self.uimanager.add_ui_from_string(self.menuString)
 			self.actiongroup = gtk.ActionGroup('CatByte')
+			
 			self.closeDocumentMenuItem = gtk.Action('Close Document', 'Close Document', 'Close Document', gtk.STOCK_QUIT)
 			self.closeDocumentMenuItem.connect("activate", self.closeDocument)
 			self.actiongroup.add_action_with_accel(self.closeDocumentMenuItem, "<Control>W")
+			
+			self.quickOpenMenuItem = gtk.Action('Quick Open', 'Quick Open', 'Quick Open', gtk.STOCK_OPEN)
+			self.quickOpenMenuItem.connect("activate", self.quickOpen)
+			self.actiongroup.add_action_with_accel(self.quickOpenMenuItem, "<Control><Shift>o")
+			
 			self.saveAsMenuItem = gtk.Action('Save as...', 'Save as...', 'Save as...', gtk.STOCK_SAVE)
 			self.saveAsMenuItem.connect("activate", self.saveAs)
 			self.actiongroup.add_action_with_accel(self.saveAsMenuItem, "<Control><Shift>S")
+			
 			self.actiongroup.add_actions([
 										('New', gtk.STOCK_NEW, 'New', None, "New File", self.newFile),
 										('Open', gtk.STOCK_OPEN, 'Open', None, "Open a File", self.normOpen),
-										('Quick Open', None, 'Quick _Open', None, "Quickly Open a File", self.quickOpen),
 										('Save', gtk.STOCK_SAVE, 'Save', None, "Save File", self.saveFile),
 										('Quit', gtk.STOCK_QUIT, '_Quit', None, 'Quit CatByte', gtk.main_quit),
 										('File', None, '_File')
 										])
 			self.uimanager.insert_action_group(self.actiongroup, 0)
+			
 			self.accelgroup = self.uimanager.get_accel_group()
 			self.window.add_accel_group(self.accelgroup)
 		except Exception, e:
@@ -245,6 +269,7 @@ class EditorPart:
 			self.title = os.path.basename(self.filename)
 			catbyte.notebook.set_tab_label_text(self.vbox, self.title)
 			catbyte.setWindowTitle()
+			print "saving %s" % self.filename
 			try:
 				codefile = open(self.filename, 'wb')
 				the_source_code = self.sourcebuffer.get_text(self.sourcebuffer.get_start_iter(), self.sourcebuffer.get_end_iter(), False)
@@ -270,10 +295,9 @@ class EditorPart:
 		response = fc.run()
 		if response == gtk.RESPONSE_OK:
 			self.filename = fc.get_filename()
-			print self.filename
 			self.title = os.path.basename(self.filename)
 			catbyte.notebook.set_tab_label_text(self.vbox, self.title)
-			#catbyte.setWindowTitle(None, None, )
+			print "opening %s" % self.filename
 			try:
 				codefile = open(self.filename, 'rb')
 				filetype = mimetypes.guess_type(self.filename)[0]
