@@ -2,10 +2,14 @@
 	<menubar name="MenuBar">
 		<menu action="File">
 			<menuitem action="New"/>
+			<separator name="sep1"/>
 			<menuitem action="Open"/>
 			<menuitem action="Quick Open"/>
+			<separator name="sep2"/>
 			<menuitem action="Save"/>
 			<menuitem action="Save as..."/>
+			<separator name="sep3"/>
+			<menuitem action="Close Document"/>
 			<menuitem action="Quit"/>
 		</menu>
 	</menubar>

@@ -67,6 +67,7 @@ class CatByte:
 		self.window.set_title("untitled - CatByte")
 		self.initializeMenus()
 		self.initializeNotebook()
+		self.currFilename = ""
 		self.vbox = gtk.VBox()
 		self.vbox.pack_start(self.menubar, False, False, 0)
 		self.vbox.add(self.notebox)
@@ -147,36 +148,58 @@ class CatByte:
 		pass
 	
 	def setWindowTitle(self, widget = None, arg2 = None, arg3 = None):
-		print widget, "\t", arg2, "\t", arg3
-		self.currFilename = self.documents[self.documents2.index(self.notebook.get_nth_page(arg3))].filename
-		#print self.currFilename
+		#print widget, "\t", arg2, "\t", arg3
+		print arg3
+		b = self.notebook.get_nth_page(arg3)
+		print b
+		a = self.documents.index(b)
+		print a
+		self.currFilename = self.documents[a].filename
+		print self.currFilename
 		if self.currFilename != None:
 			self.window.set_title(os.path.basename(self.currFilename) + " - " + os.path.dirname(self.currFilename) + " - CatByte")
 		else:
 			self.window.set_title("untitled - CatByte")
 	
+	def setWindowTitle2(self, filename = None):
+		if filename == None:
+			self.window.set_title("untitled - CatByte")
+		else:
+			self.window.set_title(os.path.basename(self.currFilename) + " - " + os.path.dirname(self.currFilename) + " - CatByte")
+	
 	########################
 	# Menu/Toolbar Functions
 	########################
 	def newFile(self, widget, data = None):
-		aa = EditorPart()
-		self.notebook.append_page(aa.vbox, gtk.Label(aa.title))
-		self.documents.append(aa)
-		self.documents2.append(aa.vbox)
-		self.notebook.set_tab_reorderable(aa.vbox, True)
-		self.notebook.set_tab_detachable(aa.vbox, True)
-	
-	def normOpen(self, widget, data = None):
-		aa = EditorPart()
-		aa.openFile()
-		self.notebook.append_page(aa.vbox, gtk.Label(aa.title))
-		self.documents.append(aa)
-		self.documents2.append(aa.vbox)
+		#aa = EditorPart()
+		#self.notebook.set_current_page(self.notebook.append_page(aa.vbox, gtk.Label(aa.title)))
+		#self.documents.append(aa)
+		#self.documents2.append(aa.vbox)
 		#self.notebook.set_tab_reorderable(aa.vbox, True)
 		#self.notebook.set_tab_detachable(aa.vbox, True)
+		self.documents.append(EditorPart())
+		self.documents2.append(self.documents[len(self.documents)-1].vbox)
+		self.notebook.set_current_page(self.notebook.append_page(self.documents[len(self.documents)-1].vbox, gtk.Label(self.documents[len(self.documents)-1].title)))
+		self.notebook.set_tab_reorderable(self.documents[len(self.documents)-1].vbox, True)
+		self.notebook.set_tab_detachable(self.documents[len(self.documents)-1].vbox, True)
+	
+	def normOpen(self, widget, data = None):
+		if self.window.title == "untitled - CatByte" and 1 == 1:
+			if self.documents[self.documents2.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].sourcebuffer.get_modified() == False:
+				self.documents[self.documents2.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].openFile()
+		else:
+			aa = EditorPart()
+			aa.openFile()
+			self.notebook.set_current_page(self.notebook.append_page(aa.vbox, gtk.Label(aa.title)))
+			self.documents.append(aa)
+			self.documents2.append(aa.vbox)
+			self.notebook.set_tab_reorderable(aa.vbox, True)
+			self.notebook.set_tab_detachable(aa.vbox, True)
 	
 	def quickOpen(self, widget, data = None):
-		pass
+		#pass
+		#I'm going to use this to test accessing the actualy EditorComponents
+		print self.documents2.index(self.notebook.get_nth_page(self.notebook.get_current_page()))
 	
 	def saveFile(self, widget, data = None):
 		#self.documents[self.notebook.get_current_page()].saveFile() #.saveFile()
@@ -189,13 +212,13 @@ class CatByte:
 		self.documents.pop(self.notebook.get_current_page())
 		self.notebook.remove_page(self.notebook.get_current_page())
 
-#	def delete_event(self, widget, event, data=None):
-#		#print "delete event occurred"
-#		return False
+	def delete_event(self, widget, event, data=None):
+		#print "delete event occurred"
+		return False
 
-#	def destroy(self, widget, data=None):
-#		print "Exiting CatByte"
-#		gtk.main_quit()
+	def destroy(self, widget, data=None):
+		print "Exiting CatByte"
+		gtk.main_quit()
 
 	def main(self):
 		self.window.connect("delete_event", gtk.main_quit)
@@ -232,7 +255,7 @@ class EditorPart:
 				the_source_code = ""
 				for line in codefile:
 					the_source_code += line
-				print the_source_code
+#				print the_source_code
 				self.sourcebuffer.set_text(the_source_code)
 				self.sourcebuffer.end_not_undoable_action()
 				codefile.close()
@@ -303,8 +326,8 @@ class EditorPart:
 				filetype = mimetypes.guess_type(self.filename)[0]
 				if filetype == None:
 					filetype = "text/plain"
-				else:
-					print filetype
+#				else:
+#					print filetype
 				a = gtksourceview.SourceLanguagesManager().get_language_from_mime_type(filetype)
 				self.sourcebuffer.set_language(a)
 				self.sourcebuffer.begin_not_undoable_action()
