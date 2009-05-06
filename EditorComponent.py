@@ -164,8 +164,9 @@ class KbEditorComponent(gtk.VBox):
 		response = fc.run()
 		fc.destroy()
 		if response == gtk.RESPONSE_OK:
+			self.kb_title = "", self.kb_filename
 			self.kb_filename = fc.get_filename()
-			self.title = os.path.basename(self.kb_filename)
+			self.kb_title = os.path.basename(self.kb_filename)
 			self.saveFile()
 
 	def openFile(self):
@@ -183,14 +184,24 @@ class KbEditorComponent(gtk.VBox):
 		response = fc.run()
 		fc.destroy()
 		if response == gtk.RESPONSE_OK:
+			print self.kb_title
+			self.kb_filename, self.kb_title = "", ""
 			self.kb_filename = fc.get_filename()
-			self.title = os.path.basename(self.kb_filename)
-			#catbyte.notebook.set_tab_label_text(self.vbox, self.title)
+			self.kb_title = os.path.basename(self.kb_filename)
+			#catbyte.notebook.set_tab_label_text(self.vbox, self.kb_title)
 			self.loadFile(self.kb_filename)
+
+	def getTitle(self):
+		"""Gets the title."""
+		if self.kb_filename == None:
+			self.kb_title = "untitled"
+		else:
+			self.kb_title = os.path.basename(self.kb_filename) + " - " + os.path.dirname(self.kb_filename)
+		return self.kb_title
 
 if __name__ == "__main__":
 	print "This is a demo of the KbEditorComponent PyGTK Widget."
-	print "This program is meant to be used in your program."
+	print "This class is meant to be used in your program."
 
 	window = gtk.Window()
 	window.set_title("KbEditorComponent Demo Program")
