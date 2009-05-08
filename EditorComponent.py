@@ -132,10 +132,12 @@ class KbEditorComponent(gtk.VBox):
 				codefile = open(self.kb_filename, 'wb')
 				print "saving %s" % self.kb_filename
 
-				# Using get_text() seems to be wasteful overhead and
-				# uneeded as we are grabbing the entire file, not a
-				# slice (in which case we would have used get_slice)
-				the_source_code = self.kb_sourcebuffer.text
+				# Using get_text() seems to be wasteful overhead
+				# Hoperfully, there's an easier way of doing this
+				the_source_code = self.kb_sourcebuffer.get_text(
+					self.kb_sourcebuffer.get_start_iter(),
+					self.kb_sourcebuffer.get_end_iter(),
+					False)
 				
 				codefile.write(the_source_code)
 				codefile.close() # close file to prevent memory leaks
@@ -162,12 +164,11 @@ class KbEditorComponent(gtk.VBox):
 										gtk.RESPONSE_OK))
 		fc.set_default_response(gtk.RESPONSE_OK)
 		response = fc.run()
-		fc.destroy()
 		if response == gtk.RESPONSE_OK:
-			self.kb_title = "", self.kb_filename
 			self.kb_filename = fc.get_filename()
 			self.kb_title = os.path.basename(self.kb_filename)
 			self.saveFile()
+			fc.destroy()
 
 	def openFile(self):
 		"""Opens a FileChooserDialog allowing the user to select a file
@@ -182,14 +183,13 @@ class KbEditorComponent(gtk.VBox):
 										gtk.RESPONSE_OK))
 		fc.set_default_response(gtk.RESPONSE_OK)
 		response = fc.run()
-		fc.destroy()
 		if response == gtk.RESPONSE_OK:
-			print self.kb_title
-			self.kb_filename, self.kb_title = "", ""
+			#print self.kb_title
 			self.kb_filename = fc.get_filename()
 			self.kb_title = os.path.basename(self.kb_filename)
-			#catbyte.notebook.set_tab_label_text(self.vbox, self.kb_title)
+			#catbyte.notebook.se_tab_label_text(self.vbox, self.kb_title)
 			self.loadFile(self.kb_filename)
+		fc.destroy()
 
 	def getTitle(self):
 		"""Gets the title."""

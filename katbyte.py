@@ -41,7 +41,7 @@ try:
 except:
 	raise SystemExit
 
-import pygtk
+import pygtk, pango
 
 try:
 	import gobject
@@ -142,26 +142,52 @@ class KatByte:
 	########################
 	def newFile(self, widget, data = None):
 		self.kb_documents.append(KbEditorComponent())
-		a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(self.kb_documents[len(self.kb_documents)-1].getTitle()))
+		a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled"))
 		self.notebook.set_current_page(a)
+		self.window.set_title(self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
+
+		#Wasteful way of setting properties of all tabs
+		for x in self.kb_documents:
+			self.notebook.set_tab_reorderable(x, True)
+			x.kb_sourceview.modify_font(pango.FontDescription('monotype 8'))
+			x.kb_sourceview.set_wrap_mode(gtk.WRAP_WORD)
 
 	def normOpen(self, widget, data = None):
-		self.kb_documents.append(KbEditorComponent())
-		self.kb_documents[len(self.kb_documents)-1].openFile()
-		self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(self.kb_documents[len(self.kb_documents)-1].getTitle()))
+		try:
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].openFile()
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title(self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
+		except Exception, e:
+			print str(e)
+
+		#Wasteful way of setting properties of all tabs
+		for x in self.kb_documents:
+			self.notebook.set_tab_reorderable(x, True)
+			x.kb_sourceview.modify_font(pango.FontDescription('monotype 8'))
+			x.kb_sourceview.set_wrap_mode(gtk.WRAP_WORD)
 
 	def quickOpen(self, widget, data = None):
 		pass
 
 	def saveFile(self, widget, data = None):
-		self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page())).saveFile()
+		self.kb_documents[self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].saveFile()
 
 	def saveAs(self, widget, data = None):
 		self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page())).saveAs()
 
 	def closeDocument(self, widget, data = None):
-		self.kb_documents.pop(self.notebook.get_current_page())
-		self.notebook.remove_page(self.notebook.get_current_page())
+		if self.notebook.get_n_pages() != 0:
+			a = self.notebook.get_nth_page(self.notebook.get_current_page()).kb_filename
+			if a == None:
+				print "closing untitled"
+			else:
+				print "closing " + a
+			self.kb_documents.pop(self.notebook.get_current_page())
+			self.notebook.remove_page(self.notebook.get_current_page())
+		else:
+			print "No documents to close"
 
 	###########################
 	# Signal/Callback Functions
