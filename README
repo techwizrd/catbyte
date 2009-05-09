@@ -1,1 +1,27 @@
-KatByte is a multi-purpose editor developed for quick coding. From the start I dislike the interfaces of other editors, and so I set out to build my own. Currently it is lacking in features as it is nowhere near finished, but a release is coming soon.
+KatByte 0.1.5 by techwizrd
+
+Description
+-----------
+
+KatByte is a multi-purpose editor developed for quick coding. From the start I disliked the interfaces of other editors, and so I set out to build my own. 
+
+Features
+--------
+
+- Syntax highlighting for many languages
+- More coming soon
+
+Install
+-------
+
+Currently, there is no installer. Just execute katbyte.py and you're ready to go!
+
+Contributing
+------------
+
+If you would like to contribute, we have a public github repository at http://github.com/techwizrd/catbyte
+
+License
+-------
+
+KatByte is licensed under the GPLv3 (the GNU Public License is availible at http://fsf.org).
