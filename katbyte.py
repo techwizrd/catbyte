@@ -167,6 +167,18 @@ class KatByte:
 			self.notebook.set_tab_reorderable(x, True)
 			x.kb_sourceview.modify_font(pango.FontDescription('monotype 8'))
 			x.kb_sourceview.set_wrap_mode(gtk.WRAP_WORD)
+	
+	def argOpen(self, filename = None):
+		"""Used for opening files given from the command line."""
+		try:
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].kb_filename = filename
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title(self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
+		except Exception, e:
+			print str(e)
 
 	def quickOpen(self, widget, data = None):
 		pass
@@ -212,4 +224,6 @@ class KatByte:
 if __name__ == "__main__":
 	print "KatByte v%s" % __version__
 	katbyte = KatByte()
+	for x in sys.argv:
+		katbyte.argOpen(x)
 	gtk.main()
