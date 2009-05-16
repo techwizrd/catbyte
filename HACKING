@@ -1,0 +1,22 @@
+This is a simple guide to hacking KatByte.
+
+==Dependencies
+PyGTK 2.4 or above
+Python 2.4 or 2.5
+GtkSourceView
+
+Note: I (techwizrd) use Linux (Ubuntu specifically), and so I will cater to Linux. I have every intention of this being cross-platform, and I will try to adhere to standards as much as possible. However, I do not have ready access to a Windows/OS X/*BSD, so I will need people to test and package for these systems.
+
+==Coding Style
+
+For the most part, follow PEP 8, although I have a few requests.
+
+- Use TABs for indentation, NOT spaces.
+- Use CamelCasing for variable names, function names, class names, etc.
+- Class names should start with an upper case letter, eg. ClassName not className
+- Variable and function names should start with a lower case, eg. pythonRocks not PythonRocks
+
+==Repository
+
+We use git as our VCS/SCM of choice. It allows for easy N-way merging and is very fast at pulling repositories.
+If you would like to contribute, we have a public github repository at http://github.com/techwizrd/catbyte

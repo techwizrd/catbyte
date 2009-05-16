@@ -1,27 +1,30 @@
 KatByte 0.1.5 by techwizrd
 
-Description
------------
+==Description
 
 KatByte is a multi-purpose editor developed for quick coding. From the start I disliked the interfaces of other editors, and so I set out to build my own. 
 
-Features
---------
+==Features
 
+- Fast and simple
+- Tabbed document support
 - Syntax highlighting for many languages
-- More coming soon
+- Opening files via command line arguements
+- Ability to open files over sftp, ftp, etc. (thanks to GNOME's built in support.)
+- more coming soon
 
-Install
--------
+==Install
 
 Currently, there is no installer. Just execute katbyte.py and you're ready to go!
 
-Contributing
-------------
+If you feel inclined to package this for your system, please do send me a copy. My email is theninja@bluedevs.net. 
+
+==Contributing
 
 If you would like to contribute, we have a public github repository at http://github.com/techwizrd/catbyte
 
-License
--------
+Please make sure you read the HACKING file distributed with KatByte.
+
+==License
 
 KatByte is licensed under the GPLv3 (the GNU Public License is availible at http://fsf.org).
