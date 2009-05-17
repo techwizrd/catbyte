@@ -61,7 +61,7 @@ class KatByte:
 		self.kb_documents = []
 
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-		self.window.set_size_request(800,600)
+		self.window.set_default_size(800,600)
 		self.window.set_position(gtk.WIN_POS_CENTER)
 		self.window.set_title("untitled - KatByte")
 
@@ -82,6 +82,18 @@ class KatByte:
 	<menubar name="MenuBar">
 		<menu action="File">
 			<menuitem action="New"/>
+			<menu action="New (with Template)">
+			    <menuitem action="C Source File"/>
+			    <menuitem action="C++ Source File"/>
+			    <menuitem action="D Source File"/>
+			    <menuitem action="Java Source File"/>
+			    <menuitem action="Pascal Source File"/>
+			    <menuitem action="PHP Source File"/>
+			    <menuitem action="Python Source File"/>
+			    <menuitem action="Ruby Source File"/>
+			    <menuitem action="HTML Source File"/>
+			    <menuitem action="LaTeX Source File"/>
+			</menu>
 			<separator name="sep1"/>
 			<menuitem action="Open"/>
 			<menuitem action="Quick Open"/>
@@ -115,7 +127,18 @@ class KatByte:
 										('Open', gtk.STOCK_OPEN, 'Open', None, "Open a File", self.normOpen),
 										('Save', gtk.STOCK_SAVE, 'Save', None, "Save File", self.saveFile),
 										('Quit', gtk.STOCK_QUIT, '_Quit', None, 'Quit CatByte', self.destroy),
-										('File', None, '_File')
+										('File', None, '_File'),
+										('C Source File', None, 'C Source File', None, 'Create a new C file', self.newCTemplate),
+										('C++ Source File', None, 'C++ Source File', None, 'Create a new C++ file', self.newCTemplate),
+										('D Source File', None, 'D Source File', None, 'Create a new D file', self.newDTemplate),
+										('Java Source File', None, 'Java Source File', None, 'Create a new Java file', self.newJavaTemplate),
+										('Pascal Source File', None, 'Pascal Source File', None, 'Create a new Pascal file', self.newPascalTemplate),
+										('PHP Source File', None, 'PHP Source File', None, 'Create a new PHP file', self.newPhpTemplate),
+										('Python Source File', None, 'Python Source File', None, 'Create a new Python file', self.newPythonTemplate),
+										('Ruby Source File', None, 'Ruby Source File', None, 'Create a new Ruby file', self.newRubyTemplate),
+										('HTML Source File', None, 'HTML Source File', None, 'Create a new HTML file', self.newHtmlTemplate),
+										('LaTeX Source File', None, 'LaTeX Source File', None, 'Create a new LaTeX file', self.newLatexTemplate),
+										('New (with Template)', None, 'New (with Template)')
 										])
 			self.uimanager.insert_action_group(self.actiongroup, 0)
 
@@ -200,6 +223,120 @@ class KatByte:
 			self.notebook.remove_page(self.notebook.get_current_page())
 		else:
 			print "No documents to close"
+			
+	###########################
+	# Fimctions for Templates
+	###########################
+	
+	def newCTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.c"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newCppTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.cpp"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newDTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.d"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newJavaTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.java"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newPascalTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.pas"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newPhpTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.php"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newPythonTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.py"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newRubyTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.rb"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newHtmlTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.html"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newLatexTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.tex"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
 
 	###########################
 	# Signal/Callback Functions
@@ -224,6 +361,8 @@ class KatByte:
 if __name__ == "__main__":
 	print "KatByte v%s" % __version__
 	katbyte = KatByte()
-	for x in sys.argv:
+	for x in sys.argv[1:]:
 		katbyte.argOpen(x)
 	gtk.main()
+
+

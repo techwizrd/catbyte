@@ -199,14 +199,40 @@ class KbEditorComponent(gtk.VBox):
 			self.kb_title = os.path.basename(self.kb_filename) + " - " + os.path.dirname(self.kb_filename)
 		return self.kb_title
 
+	###########################
+	# Signal/Callback Functions
+	###########################
+
+	def modified_changed():
+		"""Prepends an asterisk when the buffer is changed."""
+		print "Modification state:" + self.kb_sourcebuffer.get_modified()
+		if self.kb_sourcebuffer.get_modified():
+			try:
+				katbyte.notebook.set_tab_label_text(self, "*" + os.path.dirname(self.kb_filename))
+				katbyte.window.set_title("*" + self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
+			except:
+				pass
+		else:
+			try:
+				katbyte.notebook.set_tab_label_text(self, os.path.dirname(self.kb_filename))
+				katbyte.window.set_title(self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
+			except:
+				pass
+
+	def main(self):
+		"""Connects all the widgets with their signals."""
+		self.kb_sourcebuffer.connect("modified-changed", modified_changed)
+
 if __name__ == "__main__":
 	print "This is a demo of the KbEditorComponent PyGTK Widget."
 	print "This class is meant to be used in your program."
 
+	a = KbEditorComponent("EditorComponent.py")
+
 	window = gtk.Window()
 	window.set_title("KbEditorComponent Demo Program")
 	window.set_size_request(400,400)
-	window.add(KbEditorComponent("EditorComponent.py"))
+	window.add(a)
 	window.connect("delete_event", gtk.main_quit)
 	window.connect("destroy", gtk.main_quit)
 	window.show_all()
