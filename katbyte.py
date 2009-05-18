@@ -225,116 +225,136 @@ class KatByte:
 			print "No documents to close"
 			
 	###########################
-	# Fimctions for Templates
+	# Functions for Templates
 	###########################
 	
 	def newCTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.c"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.c")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.c"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.c KatByte")
 		except Exception, e:
 			print str(e)
 
 	def newCppTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.cpp"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.cpp")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.cpp"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.cpp - KatByte")
 		except Exception, e:
 			print str(e)
 
 	def newDTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.d"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.d")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.d"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.d - KatByte")
 		except Exception, e:
 			print str(e)
 
 	def newJavaTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.java"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.java")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.java"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.java - KatByte")
 		except Exception, e:
 			print str(e)
 
 	def newPascalTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.pas"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.pas")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.pas"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.pas - KatByte")
 		except Exception, e:
 			print str(e)
 
 	def newPhpTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.php"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.php")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.php"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.php - KatByte")
 		except Exception, e:
 			print str(e)
 
 	def newPythonTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.py"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.py")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.py"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.py - KatByte")
 		except Exception, e:
 			print str(e)
 
 	def newRubyTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.rb"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.rb")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.rb"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.rb - KatByte")
 		except Exception, e:
 			print str(e)
 
 	def newHtmlTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.html"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.html")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.html"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.html - KatByte")
 		except Exception, e:
 			print str(e)
 
 	def newLatexTemplate(self, widget, data=None):
 		try:
-			filename = "./template/template.tex"
+			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.d")
+			#print "trying to open: " + filename
+			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.tex"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("Untitled KatByte")
+			self.window.set_title("untitled.tex - KatByte")
 		except Exception, e:
 			print str(e)
 
@@ -361,6 +381,8 @@ class KatByte:
 if __name__ == "__main__":
 	print "KatByte v%s" % __version__
 	katbyte = KatByte()
+	a = os.path.dirname(__file__)
+	print a
 	for x in sys.argv[1:]:
 		katbyte.argOpen(x)
 	gtk.main()

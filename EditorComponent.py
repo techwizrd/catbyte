@@ -96,7 +96,7 @@ class KbEditorComponent(gtk.VBox):
 		"""Load a file into the SourceBuffer."""
 		try:
 			codefile = open(filename, 'rb')
-			print "opening %s" % self.kb_filename
+			print "opening " + filename
 			filetype = mimetypes.guess_type(filename)[0]
 
 			# Prevent errors resulting from files without a filetype
