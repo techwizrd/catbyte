@@ -210,8 +210,7 @@ class KatByte:
 		self.kb_documents[self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].saveFile()
 
 	def saveAs(self, widget, data = None):
-		#self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page())).saveAs()
-		self.kb_documents[self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].saveAs()
+		self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page())).saveAs()
 
 	def closeDocument(self, widget, data = None):
 		if self.notebook.get_n_pages() != 0:
@@ -322,40 +321,36 @@ class KatByte:
 
 	def newRubyTemplate(self, widget, data=None):
 		try:
-			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.rb")
-			#print "trying to open: " + filename
-			#print "exists: " + str(os.path.exists(filename))
-			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.rb"))
-			self.notebook.set_current_page(a)
-			self.window.set_title("untitled.rb - KatByte")
-		except Exception, e:
-			print str(e)
-
-	def newHtmlTemplate(self, widget, data=None):
-		try:
-			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.html")
-			#print "trying to open: " + filename
-			#print "exists: " + str(os.path.exists(filename))
-			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.html"))
-			self.notebook.set_current_page(a)
-			self.window.set_title("untitled.html - KatByte")
-		except Exception, e:
-			print str(e)
-
-	def newLatexTemplate(self, widget, data=None):
-		try:
 			filename = os.path.abspath(os.path.dirname(__file__) + "/template/template.d")
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
 			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.tex"))
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.d"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("untitled.tex - KatByte")
+			self.window.set_title("untitled.d KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newHtmlTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.html"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
+		except Exception, e:
+			print str(e)
+
+	def newLatexTemplate(self, widget, data=None):
+		try:
+			filename = "./template/template.tex"
+			self.kb_documents.append(KbEditorComponent())
+			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.notebook.set_current_page(a)
+			self.window.set_title("Untitled KatByte")
 		except Exception, e:
 			print str(e)
 
@@ -371,18 +366,11 @@ class KatByte:
 		print "Exiting CatByte"
 		gtk.main_quit()
 
-	def updateTitle(self, widget, event, data = None):
-		"""Updates the title when the tab is changed."""
-		#print "updateTitle data: " + str(data)
-		#self.window.set_title(self.kb_documents[self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].getTitle() + " - KatByte")
-		self.window.set_title(self.notebook.get_nth_page(data).getTitle() + " - KatByte")
-
 	def main(self):
 		"""Connect all the signals and callbacks."""
 
 		self.window.connect("delete_event", self.delete_event)
 		self.window.connect("destroy", self.destroy)
-		self.notebook.connect("switch-page", self.updateTitle)
 
 		self.window.show_all()
 
