@@ -129,7 +129,7 @@ class KatByte:
 										('Quit', gtk.STOCK_QUIT, '_Quit', None, 'Quit CatByte', self.destroy),
 										('File', None, '_File'),
 										('C Source File', None, 'C Source File', None, 'Create a new C file', self.newCTemplate),
-										('C++ Source File', None, 'C++ Source File', None, 'Create a new C++ file', self.newCTemplate),
+										('C++ Source File', None, 'C++ Source File', None, 'Create a new C++ file', self.newCppTemplate),
 										('D Source File', None, 'D Source File', None, 'Create a new D file', self.newDTemplate),
 										('Java Source File', None, 'Java Source File', None, 'Create a new Java file', self.newJavaTemplate),
 										('Pascal Source File', None, 'Pascal Source File', None, 'Create a new Pascal file', self.newPascalTemplate),
@@ -160,14 +160,24 @@ class KatByte:
 		for x in self.kb_documents:
 			self.notebook.set_tab_reorderable(x, True)
 
+	def getCurrentEditor(self):
+		"""Gets the current editor widget from the gtk.Notebook"""
+		return self.notebook.get_nth_page(self.notebook.get_current_page())
+	
+	def getNewestDocument(self):
+		"""Gets the most recently added Editor Component from the kb_documents"""
+		return self.kb_documents[len(self.kb_documents)-1]
+
 	########################
 	# Menu/Toolbar Functions
 	########################
 	def newFile(self, widget, data = None):
 		self.kb_documents.append(KbEditorComponent())
-		a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled"))
+		#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled"))
+		a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled"))
 		self.notebook.set_current_page(a)
-		self.window.set_title(self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
+		#self.window.set_title(self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
+		self.window.set_title("untitled - KatByte")
 
 		#Wasteful way of setting properties of all tabs
 		for x in self.kb_documents:
@@ -178,10 +188,13 @@ class KatByte:
 	def normOpen(self, widget, data = None):
 		try:
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].openFile()
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			#self.kb_documents[len(self.kb_documents)-1].openFile()
+			self.getNewestDocument().openFile()
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label(os.path.basename(self.getNewestDocument().kb_filename)))
 			self.notebook.set_current_page(a)
-			self.window.set_title(self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
+			#self.window.set_title(self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
+			self.window.set_title(self.getNewestDocument().getTitle() + " - KatByte")
 		except Exception, e:
 			print str(e)
 
@@ -195,9 +208,12 @@ class KatByte:
 		"""Used for opening files given from the command line."""
 		try:
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].kb_filename = filename
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			#self.kb_documents[len(self.kb_documents)-1].kb_filename = filename
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label(os.path.basename(self.kb_documents[len(self.kb_documents)-1].kb_filename)))
+			self.getNewestDocument().kb_filename = filename
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label(os.path.basename(self.getNewestDocument().kb_filename)))
 			self.notebook.set_current_page(a)
 			self.window.set_title(self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
 		except Exception, e:
@@ -207,15 +223,17 @@ class KatByte:
 		pass
 
 	def saveFile(self, widget, data = None):
-		self.kb_documents[self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].saveFile()
+		#self.kb_documents[self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].saveFile()
+		self.getCurrentEditor().saveFile()
 
 	def saveAs(self, widget, data = None):
 		#self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page())).saveAs()
-		self.kb_documents[self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].saveAs()
+		#self.kb_documents[self.kb_documents.index(self.notebook.get_nth_page(self.notebook.get_current_page()))].saveAs()
+		self.getCurrentEditor().saveAs()
 
 	def closeDocument(self, widget, data = None):
 		if self.notebook.get_n_pages() != 0:
-			a = self.notebook.get_nth_page(self.notebook.get_current_page()).kb_filename
+			a = self.getCurrentEditor().kb_filename
 			if a == None:
 				print "closing untitled"
 			else:
@@ -235,10 +253,12 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.c"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.c"))
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.c"))
 			self.notebook.set_current_page(a)
-			self.window.set_title("untitled.c KatByte")
+			self.window.set_title("untitled.c - KatByte")
 		except Exception, e:
 			print str(e)
 
@@ -248,8 +268,10 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.cpp"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			self.getNewestDocument().loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.cpp"))
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.cpp"))
 			self.notebook.set_current_page(a)
 			self.window.set_title("untitled.cpp - KatByte")
 		except Exception, e:
@@ -261,8 +283,10 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.d"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.d"))
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.d"))
 			self.notebook.set_current_page(a)
 			self.window.set_title("untitled.d - KatByte")
 		except Exception, e:
@@ -274,8 +298,10 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.java"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.java"))
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.java"))
 			self.notebook.set_current_page(a)
 			self.window.set_title("untitled.java - KatByte")
 		except Exception, e:
@@ -287,8 +313,10 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.pas"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.pas"))
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.pas"))
 			self.notebook.set_current_page(a)
 			self.window.set_title("untitled.pas - KatByte")
 		except Exception, e:
@@ -300,8 +328,10 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.php"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.php"))
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.php"))
 			self.notebook.set_current_page(a)
 			self.window.set_title("untitled.php - KatByte")
 		except Exception, e:
@@ -313,8 +343,10 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.py"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.py"))
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.py"))
 			self.notebook.set_current_page(a)
 			self.window.set_title("untitled.py - KatByte")
 		except Exception, e:
@@ -326,8 +358,10 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.rb"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.rb"))
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.rb"))
 			self.notebook.set_current_page(a)
 			self.window.set_title("untitled.rb - KatByte")
 		except Exception, e:
@@ -339,8 +373,10 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.html"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.html"))
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.html"))
 			self.notebook.set_current_page(a)
 			self.window.set_title("untitled.html - KatByte")
 		except Exception, e:
@@ -352,8 +388,10 @@ class KatByte:
 			#print "trying to open: " + filename
 			#print "exists: " + str(os.path.exists(filename))
 			self.kb_documents.append(KbEditorComponent())
-			self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
-			a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.tex"))
+			#self.kb_documents[len(self.kb_documents)-1].loadFile(filename)
+			#a = self.notebook.append_page(self.kb_documents[len(self.kb_documents)-1], gtk.Label("untitled.tex"))
+			self.getNewestDocument().loadFile(filename)
+			a = self.notebook.append_page(self.getNewestDocument(), gtk.Label("untitled.tex"))
 			self.notebook.set_current_page(a)
 			self.window.set_title("untitled.tex - KatByte")
 		except Exception, e:
@@ -387,7 +425,7 @@ class KatByte:
 		self.window.show_all()
 
 if __name__ == "__main__":
-	print "KatByte v%s" % __version__
+	print "KatByte v" + __version__
 	katbyte = KatByte()
 	a = os.path.dirname(__file__)
 	print a

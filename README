@@ -10,7 +10,6 @@ KatByte is a multi-purpose editor developed for quick coding. From the start I d
 - Tabbed document support
 - Syntax highlighting for many languages
 - Opening files via command line arguements
-- Ability to open files over sftp, ftp, etc. (thanks to GNOME's built in support.)
 - more coming soon
 
 ==Install
