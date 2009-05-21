@@ -1,0 +1,19 @@
+==TODO
+
+- Format code according to guidelines in HACKING file
+- Comment code and docstrings for each function
+- Add configuration file/preferences file for customizing of fonts, tab width,
+	colorscheme, right margin, etc.
+- Add custom color schemes
+- Add recent documents list, optional toolbar, and option side pane
+- Add Command/Statusbar
+- (?) Maybe add close buttons on each tab and pictures of the file mimetype like
+	gedit has
+- Add snippet support
+- Add custom template support
+- (?) Write custom plugin interface
+- Add terminal tab
+- Add activity log tab and integrate it with the command bar as soon as it is
+	built
+- Add project support
+
