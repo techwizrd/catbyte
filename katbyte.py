@@ -303,6 +303,11 @@ class KatByte:
 			<menuitem action="Close Document"/>
 			<menuitem action="Quit"/>
 		</menu>
+		<menu action="Edit">
+			<menuitem action="Undo"/>
+			<menuitem action="Redo"/>
+			<separator name="sep4"/>
+		</menu>
 		<menu action="Help">
 			<menuitem action="About"/>
 		</menu>
@@ -323,6 +328,14 @@ class KatByte:
 			self.saveAsMenuItem = gtk.Action('Save as...', 'Save as...', 'Save as...', gtk.STOCK_SAVE)
 			self.saveAsMenuItem.connect("activate", self.saveAs)
 			self.actiongroup.add_action_with_accel(self.saveAsMenuItem, "<Control><Shift>S")
+			
+			self.undoMenuItem = gtk.Action('Undo', 'Undo', 'Undo', gtk.STOCK_UNDO)
+			self.undoMenuItem.connect("activate", self.menuUndo)
+			self.actiongroup.add_action_with_accel(self.undoMenuItem, "<Control>z")
+			
+			self.redoMenuItem = gtk.Action('Redo', 'Redo', 'Redo', gtk.STOCK_REDO)
+			self.redoMenuItem.connect("activate", self.menuRedo)
+			self.actiongroup.add_action_with_accel(self.redoMenuItem, "<Control>y")
 
 			self.actiongroup.add_actions([
 										('New', gtk.STOCK_NEW, 'New', None, "New File", self.newFile),
@@ -341,6 +354,9 @@ class KatByte:
 										('HTML Source File', None, 'HTML Source File', None, 'Create a new HTML file', self.newHtmlTemplate),
 										('LaTeX Source File', None, 'LaTeX Source File', None, 'Create a new LaTeX file', self.newLatexTemplate),
 										('New (with Template)', None, 'New (with Template)'),
+#										('Undo', gtk.STOCK_UNDO, '_Undo', None, "Undo", self.menuUndo),
+#										('Redo', gtk.STOCK_REDO, '_Redo', None, "Redo", self.menuRedo),
+										('Edit', None, '_Edit'),
 										('About', gtk.STOCK_ABOUT ,'_About', None, 'About KatByte', self.showAboutDialog),
 										('Help', None, '_Help'),
 										])
@@ -463,6 +479,14 @@ class KatByte:
 			self.notebook.remove_page(self.notebook.get_current_page())
 		else:
 			print "No documents to close"
+			
+	def menuUndo(self, widget, data=None):
+		if self.getCurrentEditor().kb_sourcebuffer.can_undo():
+			self.getCurrentEditor().kb_sourcebuffer.undo()
+		
+	def menuRedo(self, widget, data=None):
+		if self.getCurrentEditor().kb_sourcebuffer.can_redo():
+			self.getCurrentEditor().kb_sourcebuffer.redo()
 	
 	def showAboutDialog(self, widget, data=None):
 		aboutkb = gtk.AboutDialog()
