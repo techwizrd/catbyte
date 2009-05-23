@@ -41,7 +41,7 @@ try:
 	import mimetypes
 	import os
 except ImportError, e:
-	print "%s found!" % e
+	print "%s not found!" % e
 	raise SystemExit
 except Exception, e:
 	print str(e)
@@ -89,7 +89,11 @@ class KbEditorComponent(gtk.VBox):
 				print self.kb_filename + " does not exist\n Using None"
 		else:
 			self.kb_title = "untitled"
-
+		
+		self.kb_stylescheme = gtksourceview.source_style_scheme_get_default()
+		print "Style: " + str(self.kb_stylescheme.get_tag_style("Oblivion"))
+		
+		self.main()
 		self.show_all()
 
 	def loadFile(self, filename):
@@ -184,10 +188,8 @@ class KbEditorComponent(gtk.VBox):
 		fc.set_default_response(gtk.RESPONSE_OK)
 		response = fc.run()
 		if response == gtk.RESPONSE_OK:
-			#print self.kb_title
 			self.kb_filename = fc.get_filename()
 			self.kb_title = os.path.basename(self.kb_filename)
-			#catbyte.notebook.se_tab_label_text(self.vbox, self.kb_title)
 			self.loadFile(self.kb_filename)
 		fc.destroy()
 
@@ -203,15 +205,20 @@ class KbEditorComponent(gtk.VBox):
 	# Signal/Callback Functions
 	###########################
 
-	def modified_changed():
+	def modified_changed(self, data=None):
 		"""Prepends an asterisk when the buffer is changed."""
-		print "Modification state:" + self.kb_sourcebuffer.get_modified()
+		print "Modification state:" + str(self.kb_sourcebuffer.get_modified())
 		if self.kb_sourcebuffer.get_modified():
 			try:
 				katbyte.notebook.set_tab_label_text(self, "*" + os.path.dirname(self.kb_filename))
-				katbyte.window.set_title("*" + self.kb_documents[len(self.kb_documents)-1].getTitle() + " - KatByte")
-			except:
-				pass
+				print "changed tab title"
+				katbyte.window.set_title("*" + self.getTitle() + " - KatByte")
+				print "changed window title"
+			except Exception, e:
+				print str(e)
+				print "could not change tab title and/or window title"
+				del e
+				#pass
 		else:
 			try:
 				katbyte.notebook.set_tab_label_text(self, os.path.dirname(self.kb_filename))
@@ -221,7 +228,7 @@ class KbEditorComponent(gtk.VBox):
 
 	def main(self):
 		"""Connects all the widgets with their signals."""
-		self.kb_sourcebuffer.connect("modified-changed", modified_changed)
+		self.kb_sourcebuffer.connect("modified-changed", self.modified_changed)
 
 if __name__ == "__main__":
 	print "This is a demo of the KbEditorComponent PyGTK Widget."
