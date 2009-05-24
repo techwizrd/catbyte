@@ -1,5 +1,13 @@
 This is a simple guide to hacking KatByte.
 
+==Notes
+
+All the real code has been moved to katbyte.py
+
+I have currently fazed out EditorComponent.py, and menus.xml and the original catbyte.py were fazed out long before that.
+
+If you would like to help coding, please read the TODO file, pick item you are interested in, and start HACKING away. Thank you in advance for contributing.
+
 ==Dependencies
 PyGTK 2.4 or above
 Python 2.4 or 2.5
