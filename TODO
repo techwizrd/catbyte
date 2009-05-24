@@ -1,9 +1,11 @@
 ==TODO
 
+- Profile the code with cProfile and do a detailed line-by-line code review to try and optimize the code. This is extremely important as KatByte is a huge hack right now and needs some optimization and fixing up if and sort of reasonable development can continue. If more features are continually added, performance will start dropping, and CPU and memory will skyrocket.
 - Format code according to guidelines in HACKING file
 - Comment code and docstrings for each function
 - Add configuration file/preferences file for customizing of fonts, tab width,
 	colorscheme, right margin, etc.
+
 - Add custom color schemes
 - Add recent documents list, optional toolbar, and option side pane
 - Add Command/Statusbar
