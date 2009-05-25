@@ -1,21 +1,31 @@
 ==TODO
 
-- Profile the code with cProfile and do a detailed line-by-line code review to try and optimize the code. This is extremely important as KatByte is a huge hack right now and needs some optimization and fixing up if and sort of reasonable development can continue. If more features are continually added, performance will start dropping, and CPU and memory will skyrocket.
+This list is by no means complete. This is just a short list of stuff we need to accomplish, or atleast whatever came to mind when I was writing this. I have included notes on most items in the parenthesis following the aforementioned item, or in the descriptive text afterwards.
+
+===Most important items
+
 - Format code according to guidelines in HACKING file
 - Comment code and docstrings for each function
-- Add configuration file/preferences file for customizing of fonts, tab width,
-	colorscheme, right margin, etc.
+- Profile the code with cProfile and do a detailed line-by-line code review to try and optimize the code. This is extremely important as KatByte is a huge hack right now and needs some optimization and fixing up if and sort of reasonable development can continue. If more features are continually added, performance will start dropping, and CPU and memory will skyrocket. (possible problem spots include abuse of os.path and extraneous try-except statements everywhere)
+- Fix Close button on the gtk.AboutDialog; currently the only way to close it is by using the Escape key
 
-- Add custom color schemes
-- Add recent documents list, optional toolbar, and option side pane
-- Add Command/Statusbar
-- (?) Maybe add close buttons on each tab and pictures of the file mimetype like
-	gedit has
-- Add snippet support
-- Add custom template support
-- (?) Write custom plugin interface
-- Add terminal tab
+===Features to-be-implemented
+- Add configuration file/preferences file for customizing of fonts, tab width, colorscheme, right margin, etc. (assess GConf and how well it works crossplatform first; possible use of Glade?)
+- Add a Fullscreen toggle to the yet-to-be-written View menu
+- Add Find/Replace (requires modular command bar, possibly with plugin interface; requires live regex support; requires either use of yet-to-be-implented sidebar, or greater support for custom EditorComponents; also requires highlighting support)
+- Add Quick Open (requires yet-to-be-implemented sidebar)
+- Finish the Edit menu (needs Cut, Copy, Paste, Delete, and Select All, all of which are already natively availible in gtksourceview via coontext menu; also needs a preferences button and a yet-to-be-written preferences pane)
+- Add custom color schemes (study of on StyleScheme; seems difficult)
+- Add recent documents list (Add to file menu, add to yet-to-be-implemented toolbar)
+- optional toolbar (toggled via checkbox on yet-to-be-written view menu)
+- option side pane (toggled via keystroke, maybe F9; just add it to the gtk.HPane, katbyte.notebox)
+- Add Command/Statusbar (toggled via a keystroke)
+- (?) Maybe add close buttons on each tab and pictures of the file mimetype like gedit has (possibly implemented by replacing the gtk.Label() on each tab with a button box or custom widget)
+- Add snippet support (requires yet-to-be-implemented sidebar)
+- Add custom template support (could utilize yet-to-be-implemented sidebar)
+- (?) Write custom plugin interface (could allow for UI strings to be merged to menus, custom sidebars, command bar commands, and custom EditorComponents)
+- Add terminal tab (add support for more EditorComponents)
 - Add activity log tab and integrate it with the command bar as soon as it is
-	built
-- Add project support
+	built (add support for more EditorComponents)
+- Add project support (requires sessions, session saving, new custom project support, menu on the menubar, possible utilization of yet-to-be-implemented sidebar to open projects or custom project templates)
 

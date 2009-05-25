@@ -4,7 +4,7 @@ This is a simple guide to hacking KatByte.
 
 All the real code has been moved to katbyte.py
 
-I have currently fazed out EditorComponent.py, and menus.xml and the original catbyte.py were fazed out long before that.
+I have currently deprecated EditorComponent.py, and menus.xml and the original catbyte.py were deprecated long before that (relatively long in my view of things).
 
 If you would like to help coding, please read the TODO file, pick item you are interested in, and start HACKING away. Thank you in advance for contributing.
 
